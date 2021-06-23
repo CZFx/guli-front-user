@@ -1,8 +1,8 @@
 {
-  "name": "name",
+  "name": "guli-user",
   "version": "1.0.0",
-  "description": "{{ description }}",
-  "author": "{{ author }}",
+  "description": "谷粒学院前台网站",
+  "author": "CZFx <czfx2436@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "nuxt",
