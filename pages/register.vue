@@ -29,7 +29,7 @@
             <i class="el-icon-circle-check"/>
           </div>
           <div class="btn" style="position:absolute;right: 0;top: 6px;width: 40%;">
-            <a href="javascript:" type="button" @click="getCodeFun()" :value="codeTest" style="border: none;background-color: none">{{codeTest}}</a>
+            <el-button type="text" :disabled="!sending" @click="getCodeFun()" :value="codeTest">{{codeTest}}</el-button>
           </div>
         </el-form-item>
 
@@ -117,7 +117,6 @@
           if (this.second < 1) {
             clearInterval(result);
             this.sending = true;
-            //this.disabled = false;
             this.second = 60;
             this.codeTest = "获取验证码"
           }
@@ -126,11 +125,11 @@
       },
        //通过输入手机号发送验证码
        getCodeFun() {
+         //调用倒计时的方法
+         this.timeDown()
          registerApi.sendCode(this.params.email)
           .then(response => {
               this.sending = false
-              //调用倒计时的方法
-              this.timeDown()
           })
        },
 
