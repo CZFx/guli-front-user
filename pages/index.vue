@@ -33,6 +33,7 @@
                   <div class="cc-l-wrap">
                     <section class="course-img">
                       <img
+                        style="height: 150px; width: 260px;"
                         :src="course.cover"
                         class="img-responsive"
                         :alt="course.title"
