@@ -4,7 +4,7 @@
     <header id="header">
       <section class="container">
         <h1 id="logo">
-          <a href="#" title="谷粒学院">
+          <a href="/" title="谷粒学院">
             <img src="~/assets/img/logo.png" width="100%" alt="谷粒学院">
           </a>
         </h1>
@@ -117,11 +117,19 @@
   </div>
 </template>
 <script>
-import "~/assets/css/reset.css";
-import "~/assets/css/theme.css";
-import "~/assets/css/global.css";
-import "~/assets/css/web.css";
+import '~/assets/css/reset.css'
+import '~/assets/css/theme.css'
+import '~/assets/css/global.css'
+import '~/assets/css/web.css'
+import '~/assets/css/base.css'
+import '~/assets/css/activity_tab.css'
+import '~/assets/css/bottom_rec.css'
+import '~/assets/css/nice_select.css'
+import '~/assets/css/order.css'
+import '~/assets/css/swiper-3.3.1.min.css'
+import "~/assets/css/pages-weixinpay.css"
 import cookie from 'js-cookie'
+import loginApi from '@/api/login'
 export default {
   data() {
     return {
@@ -139,8 +147,8 @@ export default {
   created() {
     //获取路径里面token值
     this.token = this.$route.query.token
-    console.log(this.token)
     if(this.token) {//判断路径是否有token值
+      console.log(this.token)
       this.wxLogin()
     }
 

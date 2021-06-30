@@ -8,21 +8,22 @@
 
     <div class="sign-up-container">
       <el-form ref="userForm" :model="user">
-
-        <el-form-item class="input-prepend restyle" prop="mobileOrEmail" :rules="[{ required: true, message: '请输入邮箱', trigger: 'blur' },{validator: checkEmail, trigger: 'blur'}]">
-          <div >
-            <el-input type="text" placeholder="邮箱" v-model="user.mobileOrEmail"/>
-            <i class="el-icon-message" />
-          </div>
+        <el-form-item prop="mobileOrEmail"
+                      :rules="[{ required: true, message: '请输入邮箱', trigger: 'blur' },
+                      {validator: checkEmail, trigger: 'blur'}]">
+            <el-input prefix-icon="el-icon-message"
+                      placeholder="请输入邮箱"
+                      v-model="user.mobileOrEmail"
+                      clearable/>
         </el-form-item>
-
-        <el-form-item class="input-prepend" prop="password" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
-          <div>
-            <el-input type="password" placeholder="密码" v-model="user.password"/>
-            <i class="el-icon-lock"/>
-          </div>
+        <el-form-item prop="password"
+                      :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
+            <el-input prefix-icon="el-icon-lock"
+                      placeholder="请输入密码"
+                      v-model="user.password"
+                      show-password
+                      clearable/>
         </el-form-item>
-
         <div class="btn">
           <input type="button" class="sign-in-button" value="登录" @click="submitLogin()">
         </div>

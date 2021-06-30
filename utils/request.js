@@ -3,7 +3,7 @@ import cookie from 'js-cookie'
 import { MessageBox, Message } from 'element-ui'
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'http://localhost:9001', // api的base_url
+  baseURL: 'http://39.96.82.231:9001', // api的base_url
   timeout: 20000 // 请求超时时间
 })
 // http request 拦截器

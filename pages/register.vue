@@ -9,35 +9,40 @@
     <div class="sign-up-container">
       <el-form ref="userForm" :model="params">
 
-        <el-form-item class="input-prepend restyle" prop="nickname" :rules="[{ required: true, message: '请输入你的昵称', trigger: 'blur' }]">
-          <div>
-            <el-input type="text" placeholder="你的昵称" v-model="params.nickname"/>
-            <i class="el-icon-user"/>
-          </div>
+        <el-form-item prop="nickname"
+                      :rules="[{ required: true, message: '请输入你的昵称', trigger: 'blur' }]">
+          <el-input prefix-icon="el-icon-user"
+                    placeholder="请输入昵称"
+                    v-model="params.nickname"
+                    clearable/>
         </el-form-item>
 
-        <el-form-item class="input-prepend restyle no-radius" prop="email" :rules="[{ required: true, message: '请输入邮箱', trigger: 'blur' },{validator: checkEmail, trigger: 'blur'}]">
-          <div>
-            <el-input type="text" placeholder="邮箱" v-model="params.email"/>
-            <i class="el-icon-message"/>
-          </div>
+        <el-form-item prop="email"
+                      :rules="[{ required: true, message: '请输入邮箱', trigger: 'blur' },
+                      {validator: checkEmail, trigger: 'blur'}]">
+          <el-input prefix-icon="el-icon-message"
+                    placeholder="请输入邮箱"
+                    v-model="params.email"
+                    clearable/>
         </el-form-item>
 
-        <el-form-item class="input-prepend restyle no-radius" prop="code" :rules="[{ required: true, message: '请输入验证码', trigger: 'blur' }]">
+        <el-form-item prop="code" :rules="[{ required: true, message: '请输入验证码', trigger: 'blur' }]">
           <div style="width: 100%;display: block;float: left;position: relative">
-            <el-input type="text" placeholder="验证码" v-model="params.code"/>
-            <i class="el-icon-circle-check"/>
+            <el-input prefix-icon="el-icon-circle-check"
+                      placeholder="请输入验证码"
+                      v-model="params.code"/>
           </div>
-          <div class="btn" style="position:absolute;right: 0;top: 6px;width: 40%;">
-            <el-button type="text" :disabled="!sending" @click="getCodeFun()" :value="codeTest">{{codeTest}}</el-button>
+          <div class="btn" style="position:absolute;right: 0;width: 40%;">
+            <el-button type="text" :disabled="sending" @click="getCodeFun()" :value="codeTest">{{codeTest}}</el-button>
           </div>
         </el-form-item>
 
-        <el-form-item class="input-prepend" prop="password" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
-          <div>
-            <el-input type="password" placeholder="设置密码" v-model="params.password"/>
-            <i class="el-icon-lock"/>
-          </div>
+        <el-form-item prop="password" :rules="[{ required: true, message: '请输入密码', trigger: 'blur' }]">
+            <el-input prefix-icon="el-icon-lock"
+                      placeholder="请输入密码"
+                      v-model="params.password"
+                      show-password
+                      clearable/>
         </el-form-item>
 
         <div class="btn">
@@ -80,7 +85,7 @@
           nickname: '',
           password: ''
         },
-        sending: true,      //是否发送验证码
+        sending: false,    //是否发送验证码
         second: 60,        //倒计时间
         codeTest: '获取验证码'
       }
@@ -116,7 +121,7 @@
           this.codeTest = this.second
           if (this.second < 1) {
             clearInterval(result);
-            this.sending = true;
+            this.sending = false;
             this.second = 60;
             this.codeTest = "获取验证码"
           }
@@ -127,9 +132,10 @@
        getCodeFun() {
          //调用倒计时的方法
          this.timeDown()
+         this.sending = true
          registerApi.sendCode(this.params.email)
           .then(response => {
-              this.sending = false
+
           })
        },
 
