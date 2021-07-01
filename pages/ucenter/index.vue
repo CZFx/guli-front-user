@@ -9,10 +9,21 @@
       </header>
       <el-form ref="form" :model="userInfo" label-width="80px">
         <el-form-item label="头像">
-          <el-avatar :size="60" src="https://empty" @error="errorHandler">
+          <el-upload
+            class="avatar-uploader"
+            :action="this.UPLOAD_API"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="userInfo.avatar" :src="userInfo.avatar" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+<!--        <el-form-item label="头像">
+          <el-avatar :size="60">
             <img :src="userInfo.avatar"/>
           </el-avatar>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="昵称">
           <el-col span="7">
             <el-input v-model="userInfo.nickname"></el-input>
@@ -157,20 +168,11 @@ export default {
     return {
       page:1, //当前页
       data:{},  //课程列表
-      subjectNestedList: [], // 一级分类列表
-      subSubjectList: [], // 二级分类列表
 
-      searchObj: {}, // 查询表单对象
-
-      limit: 8, // 每页记录数
+      limit: 5, // 每页记录数
       total: 0, // 总记录数
 
       index:-1,
-      oneIndex:-1,
-      twoIndex:-1,
-      buyCountSort:"",
-      gmtCreateSort:"",
-      priceSort:"",
 
       userInfo:'',
       purchasedCourse:{},
@@ -185,17 +187,34 @@ export default {
       second: 60,        //倒计时间
       codeTest: '获取验证码',
 
-      dialogFormVisible: false
+      dialogFormVisible: false,
+
+      UPLOAD_API: 'http://39.96.82.231:9001'+'/eduoss/fileoss'
     }
   },
   created() {
-    //课程第一次查询
-    this.getPage(1)
-    //一级分类显示
-    this.initSubject()
     this.initUcenterInfo()
   },
   methods:{
+    //上传封面成功
+    handleAvatarSuccess(res, file) {
+      this.userInfo.avatar=res.data.url
+      this.$message.success('头像上传成功')
+    },
+    //上传之前
+    beforeAvatarUpload(file){
+      console.log(this.UPLOAD_API)
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
     updateUserPassword() {
       ucenterApi.updateUserPassword(this.params)
         .then(response => {
@@ -243,124 +262,6 @@ export default {
         this.data = response.data.data.page
         this.total = this.data.total
       })
-    },
-    //2 查询所有一级分类
-    initSubject() {
-      courseApi.getAllSubject()
-        .then(response => {
-          this.subjectNestedList = response.data.data.list
-        })
-    },
-
-    //3 点击某个一级分类，查询对应二级分类
-    searchOne(subjectParentId,index) {
-      //把传递index值赋值给oneIndex,为了current样式生效
-      this.oneIndex = index
-      console.log(index)
-
-      this.twoIndex = -1
-      this.searchObj.subjectId = ""
-      this.subSubjectList = []
-
-      //把一级分类点击id值，赋值给searchObj
-      this.searchObj.subjectParentId = subjectParentId
-      //点击某个一级分类进行条件查询
-      this.getPage(1)
-
-      //拿着点击一级分类id 和 所有一级分类id进行比较，
-      //如果id相同，从一级分类里面获取对应的二级分类
-      for(let i=0;i<this.subjectNestedList.length;i++) {
-        //获取每个一级分类
-        var oneSubject = this.subjectNestedList[i]
-        //比较id是否相同
-        if(subjectParentId === oneSubject.id) {
-          //从一级分类里面获取对应的二级分类
-          this.subSubjectList = oneSubject.children
-        }
-      }
-    },
-
-    //4 点击某个二级分类实现查询
-    searchTwo(subjectId,index) {
-      //把index赋值,为了样式生效
-      this.twoIndex = index
-      console.log(index)
-      //把二级分类点击id值，赋值给searchObj
-      this.searchObj.subjectId = subjectId
-      //点击某个二级分类进行条件查询
-      this.getPage(1)
-    },
-
-    //5 根据销量排序
-    searchBuyCount() {
-      //设置对应变量值，为了样式生效
-      this.buyCountSort = "1"
-      this.gmtCreateSort = ""
-      this.priceSort = ""
-
-      //把值赋值到searchObj
-      this.searchObj.buyCountSort = this.buyCountSort
-      this.searchObj.gmtCreateSort = this.gmtCreateSort;
-      this.searchObj.priceSort = this.priceSort;
-
-      //调用方法查询
-      this.getPage(1)
-    },
-
-    //6 最新排序
-    searchGmtCreate() {
-      //设置对应变量值，为了样式生效
-      this.buyCountSort = ""
-      this.gmtCreateSort = "1"
-      this.priceSort = ""
-
-      //把值赋值到searchObj
-      this.searchObj.buyCountSort = this.buyCountSort
-      this.searchObj.gmtCreateSort = this.gmtCreateSort;
-      this.searchObj.priceSort = this.priceSort;
-
-      //调用方法查询
-      this.getPage(1)
-    },
-
-    //7 价格排序
-    searchPrice() {
-      //设置对应变量值，为了样式生效
-      this.buyCountSort = ""
-      this.gmtCreateSort = ""
-      this.priceSort = "1"
-
-      //把值赋值到searchObj
-      this.searchObj.buyCountSort = this.buyCountSort
-      this.searchObj.gmtCreateSort = this.gmtCreateSort;
-      this.searchObj.priceSort = this.priceSort;
-
-      //调用方法查询
-      this.getPage(1)
-    },
-
-    //注册提交的方法
-    submitRegister() {
-      registerApi.registerMember(this.params)
-        .then(response => {
-          if (response.data.message != null && response.data.message !== '') {
-            //注册失败提示信息
-            this.$message({
-              type: 'error',
-              message: response.data.message
-            })
-          } else {
-
-            //提示注册成功
-            this.$message({
-              type: 'success',
-              message: "注册成功"
-            })
-            //跳转登录页面
-            this.$router.push({path:'/login'})
-          }
-
-        })
     },
     timeDown() {
       let result = setInterval(() => {

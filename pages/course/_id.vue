@@ -100,7 +100,7 @@
                   <section class="mt20">
                     <div class="lh-menu-wrap">
                       <menu id="lh-menu" class="lh-menu mt10 mr10">
-                        <ul>
+                        <ul v-if="isbuy || Number(courseWebVo.price) === 0">
                           <!-- 文件目录 -->
                           <li class="lh-menu-stair" v-for="chapter in chapterVideoList" :key="chapter.id">
                             <a href="javascript: void(0)" :title="chapter.title" class="current-1">
@@ -121,6 +121,10 @@
 
                           </li>
                         </ul>
+                        <section class="no-data-wrap" v-else>
+                          <em class="icon30 no-data-ico">&nbsp;</em>
+                          <span class="c-666 fsize14 ml10 vam">购买课程后解锁全部内容</span>
+                        </section>
                       </menu>
                     </div>
                   </section>
